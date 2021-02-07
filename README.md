@@ -2,6 +2,7 @@ RELEASE NOTES
 
 v0.10
 6 FEB 2021 - Initial commit with references and context (README.md).
+Includes basic file IO and test plot classes.
 
 INTRODUCTION
 
