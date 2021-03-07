@@ -1,4 +1,7 @@
 RELEASE NOTES
+v0.30 
+6 MAR 2021 - Completed Class III Noise
+
 v0.20
 6 MAR 2021 - Completed Class I Noise
 

@@ -46,7 +46,7 @@ class testPlot:
         # generate amplitude vs time vector (dBm)
         ampSig = np.abs(sigOrig)
         # replace zero's with precision value
-        ampSig[np.where(ampSig==0)] = prec
+        ampSig[np.where(ampSig==0.0)] = prec
         ampSig = ampSig[0:-1]
         # modify vector from vrms to dBm scale
         ampSig = 20.0 * np.log10(ampSig) + 30
@@ -64,7 +64,7 @@ class testPlot:
         # generate fft plot
         fftSig = np.abs(np.fft.fftshift(np.fft.fft(sigOrig)))
         # replace zero's with precision value
-        fftSig[np.where(fftSig)==0] = prec
+        fftSig[np.where(fftSig)==0.0] = prec
         # modify vector from vrms to dBm scale
         fftSig = 20.0 * np.log10(fftSig) - 20.0 * np.log10(nLen) + 30.0
         # axis vector
@@ -73,6 +73,7 @@ class testPlot:
         ax.plot(fAxis, fftSig)
         ax.grid(True)
         ax.set_xlim(np.min(fAxis), np.max(fAxis))
+        ax.set_ylim(np.max(fftSig) - 50, np.max(fftSig) + 10)
         ax.set_title('FFT')
         ax.set_ylabel('PSD, dBm/Hz')
         ax.set_xlabel('Freq., Hz')

@@ -3,6 +3,13 @@ import numpy as np
 import scipy.signal as scpSig
 
 class noiseGen:
+    def comp_mod(self, freqVec, ampVec=[]):
+        if not len(ampVec):
+            ampVec = np.ones(self.nLen)
+        phVec = 2.0 * np.pi * np.cumsum(freqVec) / self.fs
+        sigOut = ampVec * np.exp(1j * phVec)
+        return sigOut
+        
     def __init__(self, fs, bw, tLen, tPw=[]):
         if not tPw:
             tPw = tLen / 1000.0
@@ -14,7 +21,7 @@ class noiseGen:
         self.hLpfA = []
         self.hLpfB = []
         
-class noiseOne(noiseGen):
+class noise1(noiseGen):
     def make_lpf(self):
         ripDb = 3.0
         stopDb = 30.0
@@ -32,6 +39,12 @@ class noiseOne(noiseGen):
         sigOut,self.zi = scpSig.lfilter(self.hLpfB, self.hLpfA, wNoise, zi=self.zi)
         return sigOut
         
+class noise3(noiseGen):
+    def make_sig(self):
+        proType = np.linspace(-1.0, 1.0 ,self.nPw) * self.bw / 2.0
+        freqVec = np.tile(proType, self.nPulses)
+        sigOut = self.comp_mod(freqVec)
+        return sigOut
         
         
 
