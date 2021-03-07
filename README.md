@@ -1,4 +1,6 @@
 RELEASE NOTES
+v0.20
+6 MAR 2021 - Completed Class I Noise
 
 v0.10
 6 FEB 2021 - Initial commit with references and context (README.md).
