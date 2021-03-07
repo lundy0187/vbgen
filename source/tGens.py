@@ -13,13 +13,19 @@ class noiseGen:
     def __init__(self, fs, bw, tLen, tPw=[]):
         if not tPw:
             tPw = tLen / 1000.0
+        # define analog values
         self.fs = fs
         self.bw = bw
+        self.tLen = tLen
+        self.tPw = tPw
+        # define digital values
         self.nPw = int(np.round(tPw * fs))
         self.nPulses = int(np.round(tLen / tPw))
         self.nLen = self.nPw * self.nPulses
+        # define placeholder objects
         self.hLpfA = []
         self.hLpfB = []
+        self.modObj = []
         
 class noise1(noiseGen):
     def make_lpf(self):
@@ -37,8 +43,17 @@ class noise1(noiseGen):
             ziNLen = max(len(self.hLpfB),len(self.hLpfA)) - 1
             self.zi = np.zeros(ziNLen)
         sigOut,self.zi = scpSig.lfilter(self.hLpfB, self.hLpfA, wNoise, zi=self.zi)
+        sigOut = sigOut / np.std(sigOut)
         return sigOut
-        
+
+class noise2(noiseGen):
+    def make_sig(self):
+        if not self.modObj:
+            self.modObj = noise1(self.fs, 1/self.tPw, self.tLen)
+        freqVec = self.bw * self.tPw * self.modObj.make_sig()
+        sigOut = self.comp_mod(freqVec)
+        return sigOut
+    
 class noise3(noiseGen):
     def make_sig(self):
         proType = np.linspace(-1.0, 1.0 ,self.nPw) * self.bw / 2.0
