@@ -12,7 +12,7 @@ class testPlot:
         self.make_phi(sigOrig, nLen, ax[1])
         self.make_freq(sigOrig, nLen, ax[2])
         self.make_fft(sigOrig, nLen, ax[3])
-        fig.show()
+        plt.show()
         
     def make_freq(self, sigOrig, nLen, ax):
         # generate freq vs time vector
