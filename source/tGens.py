@@ -34,6 +34,7 @@ class noise1(noiseGen):
         wFreq = self.bw / self.fs
         wStop = min((1 - wFreq) / 2 + wFreq, wFreq * 1.1)
         nLpf, WnArr = scpSig.cheb1ord(wFreq, wStop, ripDb, stopDb)
+        nLpf = min(nLpf, 9) # this implies a minimum frequency resolution
         self.hLpfB, self.hLpfA = scpSig.cheby1(nLpf, ripDb, WnArr)
     def make_sig(self):
         wNoise = np.random.random(self.nLen)
@@ -50,7 +51,9 @@ class noise2(noiseGen):
     def make_sig(self):
         if not self.modObj:
             self.modObj = noise1(self.fs, 1/self.tPw, self.tLen)
-        freqVec = self.bw * self.tPw * self.modObj.make_sig()
+        freqVec = self.modObj.make_sig()
+        freqVec = (1 / (1 + np.exp(-freqVec)) - 1/2) * 2
+        freqVec = self.bw * freqVec / 2
         sigOut = self.comp_mod(freqVec)
         return sigOut
     

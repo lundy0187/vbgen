@@ -73,7 +73,6 @@ class testPlot:
         ax.plot(fAxis, fftSig)
         ax.grid(True)
         ax.set_xlim(np.min(fAxis), np.max(fAxis))
-        ax.set_ylim(np.max(fftSig) - 50, np.max(fftSig) + 10)
         ax.set_title('FFT')
         ax.set_ylabel('PSD, dBm/Hz')
         ax.set_xlabel('Freq., Hz')
