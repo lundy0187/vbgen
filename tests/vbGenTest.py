@@ -1,6 +1,7 @@
 # import objects
 import sys
-sys.path.append('../source/')
+import os
+sys.path.append(os.getcwd() + '/source/')
 import numpy as np
 
 def test_plot(sigOrig, fs):
@@ -13,7 +14,7 @@ def test_noise():
     fs = 10.0e6
     bw = 2.0e6
     tPw = 1/1.0e5
-    noiseObj=noise3(fs,bw,0.003,tPw)
+    noiseObj=noise3(fs,bw,0.0001,tPw)
     sig = []
     for sigInd in range(0,5):
         sig = np.append(sig, noiseObj.make_sig())
