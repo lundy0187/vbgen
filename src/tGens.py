@@ -11,23 +11,24 @@ class noiseGen:
         self.bw = bw
         self.tLen = tLen
         self.tPw = tPw
+        # optional fields
+        self.nBins = nBins
         # define digital values
         self.nPw = int(np.round(tPw * fs))
         self.nPulses = int(np.round(tLen / tPw))
         self.nLen = self.nPw * self.nPulses
-        self.nBins = nBins
         # define placeholder objects
         self.hLpfA = []
         self.hLpfB = []
-        self.modObj = []
+        self.modObj1 = []
+        self.modObj2 = []
+        self.modObj3 = []
         # residual parameters
         self.phVal = 0
 
-    def comp_mod(self, freqVec, ampVec=[]):
-        if not len(ampVec):
-            ampVec = np.ones(self.nLen)
+    def comp_mod(self, freqVec):
         phVec = 2.0 * np.pi * np.cumsum(freqVec) / self.fs
-        sigOut = ampVec * np.exp(1j * phVec)
+        sigOut = np.exp(1j * phVec)
         return sigOut
         
 class noise1(noiseGen):
@@ -52,9 +53,9 @@ class noise1(noiseGen):
 
 class noise2(noiseGen):
     def make_sig(self):
-        if not self.modObj:
-            self.modObj = noise1(self.fs, 1/self.tPw, self.tLen)
-        freqVec = self.modObj.make_sig()
+        if not self.modObj1:
+            self.modObj1 = noise1(self.fs, 1/self.tPw, self.tLen)
+        freqVec = self.modObj1.make_sig()
         freqVec = (1 / (1 + np.exp(-freqVec)) - 1/2) * 2
         freqVec = self.bw * freqVec / 2
         sigOut = self.comp_mod(freqVec)
@@ -66,6 +67,26 @@ class noise3(noiseGen):
         freqVec = np.tile(proType, self.nPulses)
         sigOut = self.comp_mod(freqVec)
         return sigOut
+
+class noise4(noiseGen):
+    def make_sig(self):
+        # generate baseband noise signal
+        if not self.modObj2:
+            self.modObj2 = noise2(self.fs, 4/self.tPw, self.tLen, self.tPw/2)
+        bbSig = self.modObj2.make_sig()
+        # generate subcarrier mixing signal
+        if not self.modObj3:
+            self.modObj3 = noise3(self.fs, self.bw, self.tLen, self.tPw)
+        scSig = self.modObj3.make_sig()
+        # mix signals based on shorted vector
+        bbLen = len(bbSig)
+        scLen = len(scSig)
+        if bbLen >= scLen:
+            vLen =  scLen
+        elif bbLen < scLen:
+            vLen = bbLen
+        # return signal
+        return scSig[0:vLen] * bbSig[0:vLen]
 
 class noise5(noiseGen):
     def make_sig(self):
