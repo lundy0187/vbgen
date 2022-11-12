@@ -2,15 +2,8 @@
 import numpy as np
 import scipy.signal as scpSig
 
-class noiseGen:
-    def comp_mod(self, freqVec, ampVec=[]):
-        if not len(ampVec):
-            ampVec = np.ones(self.nLen)
-        phVec = 2.0 * np.pi * np.cumsum(freqVec) / self.fs
-        sigOut = ampVec * np.exp(1j * phVec)
-        return sigOut
-        
-    def __init__(self, fs, bw, tLen, tPw=[]):
+class noiseGen:      
+    def __init__(self, fs, bw, tLen, tPw=[], nBins=16):
         if not tPw:
             tPw = tLen / 1000.0
         # define analog values
@@ -22,10 +15,20 @@ class noiseGen:
         self.nPw = int(np.round(tPw * fs))
         self.nPulses = int(np.round(tLen / tPw))
         self.nLen = self.nPw * self.nPulses
+        self.nBins = nBins
         # define placeholder objects
         self.hLpfA = []
         self.hLpfB = []
         self.modObj = []
+        # residual parameters
+        self.phVal = 0
+
+    def comp_mod(self, freqVec, ampVec=[]):
+        if not len(ampVec):
+            ampVec = np.ones(self.nLen)
+        phVec = 2.0 * np.pi * np.cumsum(freqVec) / self.fs
+        sigOut = ampVec * np.exp(1j * phVec)
+        return sigOut
         
 class noise1(noiseGen):
     def make_lpf(self):
@@ -61,6 +64,14 @@ class noise3(noiseGen):
     def make_sig(self):
         proType = np.linspace(-1.0, 1.0 ,self.nPw) * self.bw / 2.0
         freqVec = np.tile(proType, self.nPulses)
+        sigOut = self.comp_mod(freqVec)
+        return sigOut
+
+class noise5(noiseGen):
+    def make_sig(self):
+        proType = np.random.randint(0, self.nBins, self.nPulses)
+        proType = (proType - self.nBins / 2) * self.bw / self.nBins
+        freqVec = np.repeat(proType, self.nPw)
         sigOut = self.comp_mod(freqVec)
         return sigOut
         
