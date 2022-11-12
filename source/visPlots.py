@@ -5,13 +5,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 class testPlot:
+    def __init__(self, figId, fs):
+        self.figId = figId
+        self.fs = fs
+
     def make_all_plots(self, sigOrig):
         nLen = len(sigOrig)
+        # establish chart objects and features
         fig, ax = plt.subplots(4)
+        fig.suptitle('Test: Noise ' + str(self.figId))
+        # generate plots
         self.make_amp(sigOrig, nLen, ax[0])
         self.make_phi(sigOrig, nLen, ax[1])
         self.make_freq(sigOrig, nLen, ax[2])
         self.make_fft(sigOrig, nLen, ax[3])
+        # show figure
         plt.show()
         
     def make_freq(self, sigOrig, nLen, ax):
@@ -87,6 +95,4 @@ class testPlot:
         tAxis = np.linspace(0, (nLen - 2) / self.fs, nLen - 1)
         return tAxis
         
-    def __init__(self, figId, fs):
-        self.figId = figId
-        self.fs = fs
+
