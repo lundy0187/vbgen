@@ -1,4 +1,4 @@
-##INTRODUCTION
+INTRODUCTION
 
 VbGen is a waveform simulation tool based on "Applied ECM: Vol. 2" by Leroy 
 B. Van Brunt. This repo includes a PDF scan of the relevant sections in 
