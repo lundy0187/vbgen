@@ -27,7 +27,11 @@ class noiseGen:
         self.phVal = 0
 
     def comp_mod(self, freqVec):
-        phVec = 2.0 * np.pi * np.cumsum(freqVec) / self.fs
+        # construct phase argument, and update with previous phase
+        phVec = 2.0 * np.pi * np.cumsum(freqVec) / self.fs + self.phVal
+        # track final phase in jammer state machine
+        self.phVal = np.mod(phVec[-1] + np.pi, 2*np.pi) - np.pi
+        # modulate
         sigOut = np.exp(1j * phVec)
         return sigOut
         
