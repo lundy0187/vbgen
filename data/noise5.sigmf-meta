@@ -1,0 +1,15 @@
+{
+    "global": {
+        "core:datatype": "cf32_le",
+        "core:sample_rate": 10000000,
+        "core:sha512": "47bbd938518b05707b34468d61aff808ab2c40de2619235e28afa3f0c74f539652c187d6c3ac99cd96efee2456afa45280b7f11b999213d45d7e6739058b7dd3",
+        "core:version": "1.0.0"
+    },
+    "captures": [
+        {
+            "core:frequency": 1000000000,
+            "core:sample_start": 0
+        }
+    ],
+    "annotations": []
+}
