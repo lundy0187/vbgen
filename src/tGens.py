@@ -21,8 +21,8 @@ class noiseGen:
         self.hLpfA = []
         self.hLpfB = []
         self.modObj1 = []
-        self.modObj2 = []
         self.modObj3 = []
+        self.modObj5 = []
         # residual parameters
         self.phVal = 0
 
@@ -76,7 +76,7 @@ class noise4(noiseGen):
     def make_sig(self):
         # generate baseband noise signal
         if not self.modObj5:
-            self.modObj2 = noise5(self.fs, 2/self.tPw, self.tLen, self.tPw*2, self.nBins)
+            self.modObj5 = noise5(self.fs, 2/self.tPw, self.tLen, self.tPw*2, self.nBins)
         bbSig = self.modObj5.make_sig()
         # generate subcarrier mixing signal
         if not self.modObj3:
