@@ -75,9 +75,9 @@ class noise3(noiseGen):
 class noise4(noiseGen):
     def make_sig(self):
         # generate baseband noise signal
-        if not self.modObj2:
-            self.modObj2 = noise2(self.fs, 4/self.tPw, self.tLen, self.tPw/2)
-        bbSig = self.modObj2.make_sig()
+        if not self.modObj5:
+            self.modObj2 = noise5(self.fs, 2/self.tPw, self.tLen, self.tPw*2, self.nBins)
+        bbSig = self.modObj5.make_sig()
         # generate subcarrier mixing signal
         if not self.modObj3:
             self.modObj3 = noise3(self.fs, self.bw, self.tLen, self.tPw)
